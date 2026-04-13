@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IncluIA — Elegí tu plan</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: { extend: {
+    colors: {
+      'inclua-primary': { DEFAULT: '#1e3a5f', light: '#2a5a8f', bg: '#e8f0fe', '50': '#f0f5ff' },
+      'inclua-accent': { DEFAULT: '#16a34a', light: '#dcfce7', dark: '#0d9448' },
+      'inclua-orange': { DEFAULT: '#ea580c', light: '#fff7ed' },
+    },
+    fontFamily: { display: ['Outfit','sans-serif'], body: ['DM Sans','sans-serif'] },
+  }}
+}
+</script>
+<style>
+  body { font-family: 'DM Sans', sans-serif; background-color: #f5f7fa; }
+  .font-display { font-family: 'Outfit', sans-serif; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.94); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  .animate-fade-up  { animation: fadeUp 0.6s ease-out forwards; }
+  .animate-scale-in { animation: scaleIn 0.55s ease-out forwards; }
+  .stagger-1 { animation-delay: 0.05s; opacity: 0; }
+  .stagger-2 { animation-delay: 0.15s; opacity: 0; }
+  .stagger-3 { animation-delay: 0.25s; opacity: 0; }
+  .stagger-4 { animation-delay: 0.38s; opacity: 0; }
+  .stagger-5 { animation-delay: 0.50s; opacity: 0; }
+
+  /* Navbar active link underline */
+  .nav-link { position: relative; }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0; right: 0;
+    height: 2px;
+    background: #16a34a;
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
+  }
+  .nav-link:hover::after { transform: scaleX(1); }
+
+  /* Pro card glow */
+  .pro-card-glow {
+    box-shadow: 0 0 0 2px rgba(22,163,74,0.18), 0 8px 40px rgba(22,163,74,0.10), 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  /* Feature row hover */
+  .feature-row { transition: background 0.15s ease; }
+  .feature-row:hover { background: rgba(0,0,0,0.015); }
+</style>
+</head>
+<body class="antialiased">
+
+<!-- ============================================================
+     NAVBAR
+     ============================================================ -->
+<nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200/70 shadow-sm">
+  <div class="mx-auto max-w-6xl px-5 h-16 flex items-center justify-between gap-4">
+
+    <!-- Logo -->
+    <a href="05-dashboard-inicio.html" class="flex items-center gap-2 shrink-0">
+      <div class="w-8 h-8 rounded-lg bg-inclua-primary flex items-center justify-center shadow-sm">
+        <svg class="w-4.5 h-4.5 text-white" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <span class="font-display font-extrabold text-xl text-inclua-primary">Inclu<span class="text-inclua-accent">IA</span></span>
+    </a>
+
+    <!-- Nav links (desktop) -->
+    <div class="hidden md:flex items-center gap-1">
+      <a href="05-dashboard-inicio.html" class="nav-link px-3.5 py-2 text-sm font-medium text-gray-500 hover:text-inclua-primary rounded-lg hover:bg-gray-50 transition-colors">
+        Inicio
+      </a>
+      <a href="06-nueva-consulta.html" class="nav-link px-3.5 py-2 text-sm font-medium text-gray-500 hover:text-inclua-primary rounded-lg hover:bg-gray-50 transition-colors">
+        Nueva guía
+      </a>
+      <a href="08-historial.html" class="nav-link px-3.5 py-2 text-sm font-medium text-gray-500 hover:text-inclua-primary rounded-lg hover:bg-gray-50 transition-colors">
+        Historial
+      </a>
+      <a href="10-planes.html" class="nav-link px-3.5 py-2 text-sm font-semibold text-inclua-primary rounded-lg bg-inclua-primary/5 transition-colors">
+        Planes
+      </a>
+    </div>
+
+    <!-- Right side: plan badge + user -->
+    <div class="flex items-center gap-3 shrink-0">
+      <!-- Plan badge (Gratuito) -->
+      <span class="hidden sm:inline-flex items-center gap-1.5 bg-gray-100 text-gray-600 text-xs font-semibold px-3 py-1.5 rounded-full border border-gray-200">
+        <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/></svg>
+        Plan Gratuito
+      </span>
+
+      <!-- User avatar -->
+      <div class="flex items-center gap-2.5 cursor-pointer group">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-inclua-primary to-inclua-primary-light flex items-center justify-center text-white text-sm font-bold shadow-sm">
+          M
+        </div>
+        <span class="hidden sm:block text-sm font-medium text-gray-700 group-hover:text-inclua-primary transition-colors">María G.</span>
+        <svg class="hidden sm:block w-4 h-4 text-gray-400 group-hover:text-inclua-primary transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+
+      <!-- Mobile menu button -->
+      <button class="md:hidden p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ============================================================
+     MAIN CONTENT
+     ============================================================ -->
+<main class="min-h-[calc(100vh-4rem)] py-10 px-5">
+  <div class="mx-auto max-w-5xl">
+
+    <!-- Page header -->
+    <div class="animate-fade-up stagger-1 mb-10 text-center">
+      <!-- Icon + title row -->
+      <div class="inline-flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 rounded-xl bg-inclua-primary flex items-center justify-center shadow-md shadow-inclua-primary/20">
+          <!-- CreditCard icon -->
+          <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+            <line x1="1" y1="10" x2="23" y2="10"/>
+          </svg>
+        </div>
+        <h1 class="font-display text-3xl sm:text-4xl font-bold text-inclua-primary tracking-tight">Elegí tu plan</h1>
+      </div>
+      <p class="text-gray-500 text-base sm:text-lg max-w-md mx-auto leading-relaxed">
+        Desbloqueá todo el potencial de IncluIA para tu aula
+      </p>
+    </div>
+
+    <!-- ---- Pricing cards grid ---- -->
+    <div class="animate-scale-in stagger-2 grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+
+      <!-- ===================== CARD 1: GRATUITO ===================== -->
+      <div class="relative bg-white rounded-2xl border border-gray-200/80 p-7 flex flex-col shadow-sm hover:shadow-md transition-shadow duration-300">
+
+        <!-- Current plan badge -->
+        <div class="absolute top-5 right-5">
+          <span class="inline-flex items-center gap-1.5 bg-gray-100 text-gray-500 text-xs font-semibold px-3 py-1 rounded-full border border-gray-200 uppercase tracking-wide">
+            <span class="w-1.5 h-1.5 rounded-full bg-gray-400 inline-block"></span>
+            Plan actual
+          </span>
+        </div>
+
+        <!-- Plan name & price -->
+        <div class="mb-6 pr-24">
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">Para empezar</p>
+          <h2 class="font-display text-3xl font-bold text-gray-800 mb-4">Gratuito</h2>
+          <div class="flex items-end gap-1">
+            <span class="font-display text-5xl font-extrabold text-gray-900">$0</span>
+            <span class="text-gray-400 text-sm font-medium mb-1.5">/mes</span>
+          </div>
+        </div>
+
+        <hr class="border-gray-100 mb-6">
+
+        <!-- Feature list -->
+        <ul class="space-y-1 flex-1 mb-7">
+          <!-- Included -->
+          <li class="feature-row flex items-center gap-3 px-2 py-2 rounded-lg">
+            <span class="w-5 h-5 rounded-full bg-inclua-accent/10 flex items-center justify-center shrink-0">
+              <svg class="w-3 h-3 text-inclua-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span class="text-sm text-gray-700">2 guías por mes</span>
+          </li>
+          <li class="feature-row flex items-center gap-3 px-2 py-2 rounded-lg">
+            <span class="w-5 h-5 rounded-full bg-inclua-accent/10 flex items-center justify-center shrink-0">
+              <svg class="w-3 h-3 text-inclua-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span class="text-sm text-gray-700">Acceso a todos los niveles educativos</span>
+          </li>
+          <li class="feature-row flex items-center gap-3 px-2 py-2 rounded-lg">
+            <span class="w-5 h-5 rounded-full bg-inclua-accent/10 flex items-center justify-center shrink-0">
+              <svg class="w-3 h-3 text-inclua-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span class="text-sm text-gray-700">12 tipos de discapacidad</span>
+          </li>
+
+          <!-- Divider between included/excluded -->
+          <li class="py-1"><hr class="border-dashed border-gray-100"></li>
+
+          <!-- Not included -->
+          <li class="feature-row flex items-center gap-3 px-2 py-2 rounded-lg">
+            <span class="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
+              <svg class="w-3 h-3 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </span>
+            <span class="text-sm text-gray-400">Historial completo <span class="text-xs text-gray-400/80 italic">(solo últimas 5)</span></span>
+          </li>
+          <li class="feature-row flex items-center gap-3 px-2 py-2 rounded-lg">
+            <span class="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
+              <svg class="w-3 h-3 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </span>
+            <span class="text-sm text-gray-400">Exportar en PDF</span>
+          </li>
+          <li class="feature-row flex items-center gap-3 px-2 py-2 rounded-lg">
+            <span class="w-5 h-5 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
+              <svg class="w-3 h-3 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </span>
+            <span class="text-sm text-gray-400">Soporte prioritario</span>
+          </li>
+        </ul>
+
+        <!-- CTA button -->
+        <button disabled class="w-full h-11 rounded-xl border border-gray-200 bg-gray-50 text-gray-400 font-semibold text-sm cursor-not-allowed flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/></svg>
+          Plan actual
+        </button>
+      </div>
+
+
+      <!-- ===================== CARD 2: PRO ===================== -->
+      <div class="relative bg-white rounded-2xl border border-inclua-accent/25 p-7 flex flex-col pro-card-glow" style="background: linear-gradient(160deg, #f0fdf4 0%, #ffffff 55%);">
+
+        <!-- Recommended badge -->
+        <div class="absolute top-5 right-5">
+          <span class="inline-flex items-center gap-1.5 bg-inclua-accent text-white text-xs font-semibold px-3 py-1 rounded-full shadow-sm uppercase tracking-wide">
+            <svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            Recomendado
+          </span>
+        </div>
+
+        <!-- Plan name & price -->
+        <div class="mb-6 pr-24">
+          <p class="text-xs font-semibold text-inclua-accent/70 uppercase tracking-widest mb-2">Para docentes activos</p>
+          <div class="flex items-center gap-2 mb-4">
+            <h2 class="font-display text-3xl font-bold text-inclua-primary">Pro</h2>
+            <!-- Sparkle icon -->
+            <svg class="w-6 h-6 text-inclua-accent" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l1.5 4.5H18l-3.75 2.73 1.43 4.4L12 11.18l-3.68 2.45 1.43-4.4L6 6.5h4.5L12 2z"/>
+              <path d="M5 15l.75 2.25H8l-1.87 1.36.71 2.2L5 19.6l-1.84 1.21.71-2.2L2 17.25h2.25L5 15z" opacity=".5"/>
+              <path d="M19 15l.75 2.25H22l-1.87 1.36.71 2.2L19 19.6l-1.84 1.21.71-2.2-1.87-1.36H19L19 15z" opacity=".5"/>
+            </svg>
+          </div>
+          <div class="flex items-end gap-1">
+            <span class="font-display text-5xl font-extrabold text-inclua-primary">$9.900</span>
+            <div class="flex flex-col mb-1.5 gap-0">
+              <span class="text-xs font-semibold text-gray-400 leading-none">ARS</span>
+              <span class="text-gray-400 text-sm font-medium leading-none">/mes</span>
+            </div>
+          </div>
+        </div>
+
+        <hr class="border-inclua-accent/15 mb-6">
+
+        <!-- Feature list -->
+        <ul class="space-y-1 flex-1 mb-7">
+          <li class="feature-row flex items-center gap-3 px-2 py-2 rounded-lg">
+            <span class="w-5 h-5 rounded-full bg-inclua-accent/15 flex items-center justify-center shrink-0">
+              <svg class="w-3 h-3 text-inclua-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span class="text-sm text-gray-800 font-medium">40 guías por mes</span>
+            <span class="ml-auto text-xs font-semibold text-inclua-accent bg-inclua-accent/10 px-2 py-0.5 rounded-full">20x más</span>
+          </li>
+          <li class="feature-row flex items-center gap-3 px-2 py-2 rounded-lg">
+            <span class="w-5 h-5 rounded-full bg-inclua-accent/15 flex items-center justify-center shrink-0">
+              <svg class="w-3 h-3 text-inclua-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span class="text-sm text-gray-800 font-medium">Acceso a todos los niveles educativos</span>
+          </li>
+          <li class="feature-row flex items-center gap-3 px-2 py-2 rounded-lg">
+            <span class="w-5 h-5 rounded-full bg-inclua-accent/15 flex items-center justify-center shrink-0">
+              <svg class="w-3 h-3 text-inclua-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span class="text-sm text-gray-800 font-medium">12 tipos de discapacidad</span>
+          </li>
+
+          <li class="py-1"><hr class="border-dashed border-inclua-accent/15"></li>
+
+          <li class="feature-row flex items-center gap-3 px-2 py-2 rounded-lg">
+            <span class="w-5 h-5 rounded-full bg-inclua-accent/15 flex items-center justify-center shrink-0">
+              <svg class="w-3 h-3 text-inclua-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span class="text-sm text-gray-800 font-medium">Historial completo ilimitado</span>
+          </li>
+          <li class="feature-row flex items-center gap-3 px-2 py-2 rounded-lg">
+            <span class="w-5 h-5 rounded-full bg-inclua-accent/15 flex items-center justify-center shrink-0">
+              <svg class="w-3 h-3 text-inclua-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span class="text-sm text-gray-800 font-medium">Exportar en PDF</span>
+          </li>
+          <li class="feature-row flex items-center gap-3 px-2 py-2 rounded-lg">
+            <span class="w-5 h-5 rounded-full bg-inclua-accent/15 flex items-center justify-center shrink-0">
+              <svg class="w-3 h-3 text-inclua-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span class="text-sm text-gray-800 font-medium">Soporte prioritario</span>
+          </li>
+        </ul>
+
+        <!-- CTA button -->
+        <a href="11-exito-pago.html" class="w-full h-11 rounded-xl bg-inclua-accent hover:bg-inclua-accent-dark text-white font-semibold text-sm shadow-md shadow-inclua-accent/25 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-inclua-accent/30 flex items-center justify-center gap-2 group">
+          Mejorar a Pro
+          <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+
+        <!-- Mercado Pago note -->
+        <p class="mt-3 text-center text-xs text-gray-400 flex items-center justify-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Pago seguro con Mercado Pago
+        </p>
+      </div>
+    </div>
+
+    <!-- ---- Bottom note: institutional ---- -->
+    <div class="animate-fade-up stagger-4 bg-inclua-primary/[0.04] border border-inclua-primary/10 rounded-2xl px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <!-- School icon -->
+        <div class="w-10 h-10 rounded-xl bg-inclua-primary/10 flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5 text-inclua-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-inclua-primary">¿Sos una institución educativa?</p>
+          <p class="text-xs text-gray-500 mt-0.5">Contactanos para conocer nuestros planes institucionales.</p>
+        </div>
+      </div>
+      <a href="mailto:hola@inclua.ar" class="shrink-0 inline-flex items-center gap-2 bg-white border border-inclua-primary/20 text-inclua-primary text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-inclua-primary/5 transition-colors shadow-sm">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        hola@inclua.ar
+      </a>
+    </div>
+
+  </div>
+</main>
+
+</body>
+</html>

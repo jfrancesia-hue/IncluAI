@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IncluIA — ¡Pago exitoso!</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: { extend: {
+    colors: {
+      'inclua-primary': { DEFAULT: '#1e3a5f', light: '#2a5a8f', bg: '#e8f0fe', '50': '#f0f5ff' },
+      'inclua-accent': { DEFAULT: '#16a34a', light: '#dcfce7', dark: '#0d9448' },
+      'inclua-orange': { DEFAULT: '#ea580c', light: '#fff7ed' },
+    },
+    fontFamily: { display: ['Outfit','sans-serif'], body: ['DM Sans','sans-serif'] },
+  }}
+}
+</script>
+<style>
+  body { font-family: 'DM Sans', sans-serif; background-color: #f5f7fa; }
+  .font-display { font-family: 'Outfit', sans-serif; }
+
+  /* ---- Keyframes ---- */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.6); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  @keyframes checkDraw {
+    from { stroke-dashoffset: 60; opacity: 0; }
+    to   { stroke-dashoffset: 0; opacity: 1; }
+  }
+  @keyframes ringPulse {
+    0%   { transform: scale(1);   opacity: 0.35; }
+    60%  { transform: scale(1.6); opacity: 0; }
+    100% { transform: scale(1.6); opacity: 0; }
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(-20px) rotate(0deg);   opacity: 1; }
+    100% { transform: translateY(80px)  rotate(720deg); opacity: 0; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-6px); }
+  }
+
+  .animate-fade-up  { animation: fadeUp 0.6s ease-out forwards; }
+  .animate-scale-in { animation: scaleIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  .animate-float    { animation: float 4s ease-in-out infinite; }
+
+  .stagger-1 { animation-delay: 0.1s;  opacity: 0; }
+  .stagger-2 { animation-delay: 0.3s;  opacity: 0; }
+  .stagger-3 { animation-delay: 0.45s; opacity: 0; }
+  .stagger-4 { animation-delay: 0.6s;  opacity: 0; }
+  .stagger-5 { animation-delay: 0.75s; opacity: 0; }
+  .stagger-6 { animation-delay: 0.9s;  opacity: 0; }
+
+  /* Check stroke animation */
+  .check-path {
+    stroke-dasharray: 60;
+    stroke-dashoffset: 60;
+    animation: checkDraw 0.5s ease-out 0.65s forwards;
+    opacity: 0;
+  }
+
+  /* Pulsing ring */
+  .ring-pulse {
+    animation: ringPulse 1.4s ease-out 0.2s forwards;
+  }
+  .ring-pulse-2 {
+    animation: ringPulse 1.4s ease-out 0.5s forwards;
+  }
+
+  /* Confetti pieces */
+  .confetti-piece {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    animation: confettiFall 1.2s ease-out forwards;
+  }
+
+  /* Summary card glow */
+  .summary-card {
+    box-shadow: 0 4px 24px rgba(22,163,74,0.10), 0 1px 4px rgba(0,0,0,0.04);
+  }
+</style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+<!-- ============================================================
+     MINIMAL NAVBAR (logo only)
+     ============================================================ -->
+<nav class="bg-white/90 backdrop-blur-sm border-b border-gray-100">
+  <div class="mx-auto max-w-6xl px-5 h-14 flex items-center justify-center">
+    <a href="05-dashboard-inicio.html" class="flex items-center gap-2">
+      <div class="w-7 h-7 rounded-lg bg-inclua-primary flex items-center justify-center shadow-sm">
+        <svg class="w-3.5 h-3.5 text-white" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <span class="font-display font-extrabold text-xl text-inclua-primary">Inclu<span class="text-inclua-accent">IA</span></span>
+    </a>
+  </div>
+</nav>
+
+
+<!-- ============================================================
+     SUCCESS CONTENT
+     ============================================================ -->
+<main class="flex-1 flex items-center justify-center px-5 py-12 relative overflow-hidden">
+
+  <!-- Background decorative blobs -->
+  <div class="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-inclua-accent/5 blur-[100px] pointer-events-none"></div>
+  <div class="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-inclua-primary/5 blur-[100px] pointer-events-none"></div>
+
+  <!-- Confetti burst (positioned around check icon area) -->
+  <div id="confetti-container" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" style="width:0;height:0;">
+    <!-- pieces rendered by JS -->
+  </div>
+
+  <div class="relative w-full max-w-md mx-auto">
+
+    <!-- ---- Success icon ---- -->
+    <div class="animate-scale-in stagger-1 flex justify-center mb-8">
+      <div class="relative">
+        <!-- Outer pulse rings -->
+        <div class="ring-pulse absolute inset-0 rounded-full bg-inclua-accent/20"></div>
+        <div class="ring-pulse-2 absolute inset-0 rounded-full bg-inclua-accent/15"></div>
+
+        <!-- Circle -->
+        <div class="relative w-24 h-24 rounded-full flex items-center justify-center animate-float"
+             style="background: linear-gradient(135deg, #16a34a 0%, #0d9448 100%); box-shadow: 0 12px 40px rgba(22,163,74,0.35), 0 4px 12px rgba(22,163,74,0.25);">
+          <!-- Checkmark SVG with draw animation -->
+          <svg class="w-11 h-11" viewBox="0 0 24 24" fill="none">
+            <polyline class="check-path" points="20 6 9 17 4 12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <!-- Sparkle accents -->
+        <div class="absolute -top-2 -right-2 w-5 h-5 text-inclua-accent animate-fade-up stagger-2">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2l1.09 4.26L17.18 5l-3.09 3.09L15 12l-3-1.5L9 12l.91-3.91L7.82 5l4.09 1.26L12 2z"/>
+          </svg>
+        </div>
+        <div class="absolute -bottom-1 -left-3 w-4 h-4 text-inclua-accent/60 animate-fade-up stagger-3">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2l1.09 4.26L17.18 5l-3.09 3.09L15 12l-3-1.5L9 12l.91-3.91L7.82 5l4.09 1.26L12 2z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---- Headline ---- -->
+    <div class="animate-fade-up stagger-2 text-center mb-2">
+      <h1 class="font-display text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
+        ¡Bienvenido/a al Plan Pro!
+      </h1>
+    </div>
+
+    <!-- ---- Subtitle ---- -->
+    <div class="animate-fade-up stagger-3 text-center mb-8">
+      <p class="text-gray-500 text-base leading-relaxed max-w-sm mx-auto">
+        Tu pago fue procesado exitosamente. Ya podés generar hasta <span class="font-semibold text-gray-700">40 guías por mes</span>.
+      </p>
+    </div>
+
+    <!-- ---- Plan summary card ---- -->
+    <div class="animate-fade-up stagger-4 bg-white rounded-2xl border border-inclua-accent/20 p-5 mb-7 summary-card"
+         style="background: linear-gradient(160deg, #f0fdf4 0%, #ffffff 60%);">
+
+      <!-- Card header -->
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-inclua-accent flex items-center justify-center shadow-sm">
+            <!-- Sparkle -->
+            <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l1.5 4.5H18l-3.75 2.73 1.43 4.4L12 11.18l-3.68 2.45 1.43-4.4L6 6.5h4.5L12 2z"/>
+            </svg>
+          </div>
+          <span class="font-display font-bold text-inclua-primary text-base">Plan Pro</span>
+        </div>
+        <span class="text-xs font-semibold text-inclua-accent bg-inclua-accent/10 px-2.5 py-1 rounded-full border border-inclua-accent/15">
+          Activo
+        </span>
+      </div>
+
+      <hr class="border-inclua-accent/10 mb-4">
+
+      <!-- Stats row -->
+      <div class="grid grid-cols-2 gap-3">
+        <!-- Guias/mes -->
+        <div class="bg-white/70 rounded-xl p-3.5 border border-gray-100/80">
+          <div class="flex items-center gap-2 mb-1">
+            <svg class="w-4 h-4 text-inclua-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            <span class="text-xs text-gray-400 font-medium">Guías disponibles</span>
+          </div>
+          <p class="font-display text-2xl font-bold text-inclua-primary">40</p>
+          <p class="text-xs text-gray-400">por mes</p>
+        </div>
+
+        <!-- Proximo vencimiento -->
+        <div class="bg-white/70 rounded-xl p-3.5 border border-gray-100/80">
+          <div class="flex items-center gap-2 mb-1">
+            <svg class="w-4 h-4 text-inclua-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            <span class="text-xs text-gray-400 font-medium">Próx. vencimiento</span>
+          </div>
+          <p class="font-display text-base font-bold text-inclua-primary leading-tight">13 de mayo</p>
+          <p class="text-xs text-gray-400">2026</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---- CTA Buttons ---- -->
+    <div class="animate-fade-up stagger-5 flex flex-col gap-3 mb-6">
+      <!-- Primary CTA -->
+      <a href="06-nueva-consulta.html"
+         class="w-full h-12 rounded-xl bg-inclua-accent hover:bg-inclua-accent-dark text-white font-semibold text-sm shadow-md shadow-inclua-accent/25 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-inclua-accent/30 flex items-center justify-center gap-2.5 group">
+        <!-- Sparkle icon -->
+        <svg class="w-4.5 h-4.5 w-[18px] h-[18px] text-white/80" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2l1.5 4.5H18l-3.75 2.73 1.43 4.4L12 11.18l-3.68 2.45 1.43-4.4L6 6.5h4.5L12 2z"/>
+          <path d="M5 15l.75 2.25H8l-1.87 1.36.71 2.2L5 19.6l-1.84 1.21.71-2.2L2 17.25h2.25L5 15z" opacity=".6"/>
+        </svg>
+        Crear mi primera guía Pro
+        <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+
+      <!-- Secondary CTA -->
+      <a href="05-dashboard-inicio.html"
+         class="w-full h-11 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 font-semibold text-sm transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2 shadow-sm">
+        <svg class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        Ir al inicio
+      </a>
+    </div>
+
+    <!-- ---- Email receipt note ---- -->
+    <div class="animate-fade-up stagger-6 text-center">
+      <p class="text-xs text-gray-400 flex items-center justify-center gap-1.5">
+        <svg class="w-3.5 h-3.5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Recibirás un comprobante en tu email
+      </p>
+    </div>
+
+  </div><!-- /max-w-md -->
+</main>
+
+
+<!-- ============================================================
+     CONFETTI SCRIPT
+     ============================================================ -->
+<script>
+(function() {
+  const colors = ['#16a34a','#0d9448','#1e3a5f','#2a5a8f','#dcfce7','#bbf7d0','#86efac','#4ade80'];
+  const shapes = ['rounded-sm','rounded-full'];
+  const container = document.getElementById('confetti-container');
+  const count = 28;
+
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('div');
+    const angle = (i / count) * 360;
+    const radius = 48 + Math.random() * 56; // px from center
+    const rad = angle * Math.PI / 180;
+    const x = Math.cos(rad) * radius;
+    const y = Math.sin(rad) * radius;
+    const size = 5 + Math.random() * 7;
+    const delay = 0.3 + Math.random() * 0.4;
+    const duration = 0.9 + Math.random() * 0.6;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const rotation = Math.random() * 360;
+
+    el.style.cssText = `
+      position: absolute;
+      width: ${size}px;
+      height: ${size}px;
+      border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+      background: ${color};
+      left: ${x}px;
+      top: ${y}px;
+      transform-origin: center center;
+      animation: confettiFall ${duration}s ease-out ${delay}s forwards;
+      opacity: 0;
+    `;
+
+    // Override animation to fan outward
+    el.style.animation = 'none';
+    el.style.opacity = '0';
+    container.appendChild(el);
+
+    // Trigger after a small delay so animation fires fresh
+    setTimeout(() => {
+      el.style.transition = `transform ${duration}s cubic-bezier(0.22,1,0.36,1) ${delay}s, opacity ${duration * 0.6}s ease-out ${delay}s`;
+      el.style.transform = `translate(${x * 1.5}px, ${y * 1.5 + 60}px) rotate(${rotation}deg)`;
+      el.style.opacity = '0';
+      // Pop in then fade
+      setTimeout(() => {
+        el.style.opacity = '1';
+        el.style.transform = `translate(${x * 0.8}px, ${y * 0.8}px) rotate(${rotation * 0.3}deg)`;
+        setTimeout(() => {
+          el.style.transition += `, opacity 0.6s ease-out`;
+          el.style.opacity = '0';
+        }, (delay + duration * 0.5) * 1000);
+      }, 50);
+    }, 10);
+  }
+})();
+</script>
+
+</body>
+</html>
