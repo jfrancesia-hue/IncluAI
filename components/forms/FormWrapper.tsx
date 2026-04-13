@@ -84,14 +84,14 @@ export function FormWrapper() {
         </div>
       )}
 
-      <div className="rounded-xl border border-border bg-card p-4 shadow-sm sm:p-6">
+      <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-sm sm:p-8">
         {step === 1 && <StepContexto form={form} updateForm={updateForm} />}
         {step === 2 && <StepDiscapacidad form={form} updateForm={updateForm} />}
         {step === 3 && <StepAdicional form={form} updateForm={updateForm} />}
 
-        <div className="mt-6 flex items-center justify-between gap-3">
+        <div className="mt-8 flex items-center justify-between gap-3 pt-6 border-t border-border/40">
           {step > 1 ? (
-            <Button variant="outline" onClick={handleBack} disabled={loading}>
+            <Button variant="outline" onClick={handleBack} disabled={loading} className="rounded-xl">
               Anterior
             </Button>
           ) : (
@@ -102,7 +102,7 @@ export function FormWrapper() {
             <Button
               onClick={handleNext}
               disabled={!canGoNext}
-              className="bg-inclua-primary hover:bg-inclua-primary-light text-white"
+              className="bg-inclua-primary hover:bg-inclua-primary-light text-white rounded-xl px-6 shadow-md shadow-inclua-primary/15 transition-all hover:-translate-y-0.5"
             >
               Siguiente
             </Button>
@@ -110,9 +110,9 @@ export function FormWrapper() {
             <Button
               onClick={handleGenerar}
               disabled={loading}
-              className="bg-inclua-accent hover:bg-inclua-accent-dark text-white px-6"
+              className="bg-inclua-accent hover:bg-inclua-accent-dark text-white px-8 rounded-xl shadow-lg shadow-inclua-accent/20 transition-all hover:-translate-y-0.5 font-semibold"
             >
-              {loading ? "Preparando..." : "Generar guía inclusiva"}
+              {loading ? "Preparando..." : "✨ Generar guia inclusiva"}
             </Button>
           )}
         </div>

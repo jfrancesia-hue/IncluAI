@@ -41,7 +41,7 @@ export function StepDiscapacidad({ form, updateForm }: Props) {
       </div>
 
       {/* Grid de discapacidades */}
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
         {DISCAPACIDADES.map((d) => {
           const selected = form.discapacidades.includes(d.id)
           return (
@@ -51,21 +51,24 @@ export function StepDiscapacidad({ form, updateForm }: Props) {
               onClick={() => toggleDiscapacidad(d.id)}
               title={d.descripcion}
               className={cn(
-                "flex flex-col items-center gap-1 rounded-xl border-2 p-3 text-center transition-all",
-                "hover:border-inclua-accent/50 focus-visible:outline-2 focus-visible:outline-inclua-primary focus-visible:outline-offset-2",
-                "min-h-[5.5rem]",
+                "group flex flex-col items-center gap-2 rounded-2xl border-2 p-4 text-center transition-all",
+                "hover:shadow-md focus-visible:outline-2 focus-visible:outline-inclua-primary focus-visible:outline-offset-2",
+                "min-h-[6rem]",
                 selected
-                  ? "border-inclua-accent bg-inclua-accent-light/50"
-                  : "border-border bg-card"
+                  ? "border-inclua-accent bg-inclua-accent-light/40 shadow-sm shadow-inclua-accent/10"
+                  : "border-border/60 bg-card hover:border-inclua-accent/40 hover:-translate-y-0.5"
               )}
               aria-pressed={selected}
             >
-              <span className="text-2xl" aria-hidden="true">
+              <span className="text-2xl transition-transform group-hover:scale-110" aria-hidden="true">
                 {d.icon}
               </span>
-              <span className="text-xs font-medium leading-tight">
+              <span className="text-xs font-semibold leading-tight">
                 {d.label}
               </span>
+              {selected && (
+                <span className="mt-auto text-[10px] font-bold text-inclua-accent uppercase tracking-wider">Seleccionado</span>
+              )}
             </button>
           )
         })}
